@@ -20,6 +20,7 @@ def main(args):
 
     train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
 
+    transforms.ConvertImageDtype()
     img_size = params.img_size
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(img_size),
@@ -59,7 +60,7 @@ def main(args):
                                              collate_fn=val_dataset.collate_fn)
 
     model = params.model.to(device)
-    model_path = os.path.join(params.path_weights, args.model_name, '.pth')  # 模型保存路径
+    model_path = os.path.join(params.path_weights, args.model_name + '.pth')  # 模型保存路径
 
     # pg = [p for p in model.parameters() if p.requires_grad]
     pg = get_params_groups(model, weight_decay=args.wd)
