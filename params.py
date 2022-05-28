@@ -6,7 +6,7 @@ from torch import nn
 
 import models
 from utils import FocalLoss
-from models
+import models
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # root directory
