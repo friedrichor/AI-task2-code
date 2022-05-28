@@ -2,7 +2,6 @@ import os
 import shutil
 
 
-
 def data_merge(data_ori: str, data_pro: str, mode: str):
     for cls in os.listdir(data_ori):
         Image_path_ori = os.path.join(data_ori, cls, 'png', mode)
@@ -17,7 +16,6 @@ def data_merge(data_ori: str, data_pro: str, mode: str):
                 img_path_ori = os.path.join(patient_path, img)
                 img_path_pro = os.path.join(Image_path_pro, str(patient) + '_' + img)
                 shutil.copy(img_path_ori, img_path_pro)
-
 
 
 if __name__ == '__main__':
