@@ -36,7 +36,7 @@ def main(args):
     # create model
     model = params.model.to(device)
     # load model weights
-    weights = os.path.join(params.path_weights, args.model_name, '.pth')  # 模型保存路径
+    weights = os.path.join(params.path_weights, args.model_name + '.pth')  # 模型保存路径
     model.load_state_dict(torch.load(weights, map_location=device))
     model.eval()
 
