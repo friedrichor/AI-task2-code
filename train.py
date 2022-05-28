@@ -9,7 +9,6 @@ from torchvision import transforms
 import params
 from my_dataset import MyDataSet
 from utils import split_train_val, create_lr_scheduler, get_params_groups, train_one_epoch, evaluate
-from models import *
 
 
 def main(args):
