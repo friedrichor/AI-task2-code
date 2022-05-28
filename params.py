@@ -17,7 +17,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 num_classes = 3
-img_size = 512
+img_size = 256
 
 # 模型
 model = models.convnext(num_classes)
