@@ -20,7 +20,6 @@ def main(args):
 
     train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
 
-    transforms.ConvertImageDtype()
     img_size = params.img_size
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(img_size),
