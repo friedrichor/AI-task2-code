@@ -10,9 +10,6 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 
 import params
-from models import *
-import numpy as np
-from datasets_process import load_ben_color, crop_image_from_gray
 
 
 def main(args):
