@@ -32,7 +32,7 @@ path_weights = '/content/drive/MyDrive/weights_task2_classify'
 weights = ''
 
 # 数据集&分类标签 路径
-path_train = '/content/drive/MyDrive/data_AItask2/Image_classify'
-# path_train = '/content/drive/MyDrive/data_AItask2/Label_classify'
+# path_train = '/content/drive/MyDrive/data_AItask2/Image_classify'
+path_train = '/content/drive/MyDrive/data_AItask2/Label_classify'
 path_test = '../test'
 path_json = ROOT / 'class_indices.json'
