@@ -6,7 +6,7 @@ import params
 from model_convnext import convnext_large
 
 
-def convnext(out_channel: int = params.num_classes, weights: str = '', freeze_layers: bool = False):
+def convnext(out_channel: int = 3, weights: str = '', freeze_layers: bool = False):
     model = convnext_large(num_classes=out_channel).to(params.device)
     if weights != "":
         weights_dict = torch.load(weights, map_location=params.device)["model"]
@@ -25,7 +25,7 @@ def convnext(out_channel: int = params.num_classes, weights: str = '', freeze_la
     return model
 
 
-def inception_v3(out_channel: int = params.num_classes):
+def inception_v3(out_channel: int = 3):
     model = models.inception_v3(False)
     model.aux_logits = False
     in_channel = model.fc.in_features
@@ -33,28 +33,28 @@ def inception_v3(out_channel: int = params.num_classes):
     return model
 
 
-def efficientnet(outchannel: int = params.num_classes):
+def efficientnet(outchannel: int = 3):
     model = models.efficientnet_b3(False)
     in_channel = model.classifier[-1].in_features
     model.classifier[-1] = nn.Linear(in_channel, outchannel)
     return model
 
 
-def densenet(out_channel: int = params.num_classes):
+def densenet(out_channel: int = 3):
     model = models.densenet121(False)
     in_channel = model.classifier.in_features
     model.classifier = torch.nn.Linear(in_channel, out_channel)
     return model
 
 
-def resnet(out_channel: int = params.num_classes):
+def resnet(out_channel: int = 3):
     model = models.resnet50(False)
     in_channel = model.fc.in_features
     model.fc = nn.Linear(in_channel, out_channel)
     return model
 
 
-def vit(out_channel: int = params.num_classes):
+def vit(out_channel: int = 3):
     model = models.vit_l_32(False)
     in_channel = model.heads[0].in_features
     model.heads = nn.Sequential(nn.Linear(in_channel, out_channel))
@@ -62,7 +62,7 @@ def vit(out_channel: int = params.num_classes):
 
 
 class MixModel1(nn.Module):
-    def __init__(self, num_classes: int = params.num_classes):
+    def __init__(self, num_classes: int = 3):
         super(MixModel1, self).__init__()
         self.model1 = convnext(num_classes)
         self.model2 = inception_v3(num_classes)
@@ -78,7 +78,7 @@ class MixModel1(nn.Module):
 
 
 class MixModel2(nn.Module):
-    def __init__(self, num_classes: int = params.num_classes):
+    def __init__(self, num_classes: int = 3):
         super(MixModel2, self).__init__()
         self.model1 = convnext(num_classes)
         self.model2 = inception_v3(num_classes)
@@ -91,7 +91,7 @@ class MixModel2(nn.Module):
 
 
 class MixModel3(nn.Module):
-    def __init__(self, num_classes: int = params.num_classes):
+    def __init__(self, num_classes: int = 3):
         super(MixModel3, self).__init__()
         self.model1 = convnext(256)
         self.model2 = inception_v3(256)
@@ -110,7 +110,7 @@ class MixModel3(nn.Module):
 
 
 class MixModel4(nn.Module):
-    def __init__(self, num_classes: int = params.num_classes):
+    def __init__(self, num_classes: int = 3):
         super(MixModel4, self).__init__()
         self.model1 = convnext(num_classes)
         self.model2 = inception_v3(num_classes)
