@@ -17,7 +17,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 num_classes = 3
-img_size = 256
+img_size = 224
 
 # 模型
 model = models.convnext(num_classes)
@@ -33,6 +33,7 @@ weights = ''
 
 # 数据集&分类标签 路径
 # path_train = '/content/drive/MyDrive/data_AItask2/Image_classify'
-path_train = '/content/drive/MyDrive/data_AItask2/Label_classify'
+# path_train = '/content/drive/MyDrive/data_AItask2/Label_classify'
+path_train = '/content/drive/MyDrive/data_AItask2/Label_classify_crop'
 path_test = '../test'
 path_json = ROOT / 'class_indices.json'
