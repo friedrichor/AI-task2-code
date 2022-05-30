@@ -71,7 +71,7 @@ def main(args):
                 # for i in range(len(predict)):
                 #     print("class: {:10}   prob: {:.3}".format(class_indict[str(i)], predict[i].numpy()))
 
-                if str(predict_cls) == cls:
+                if predict_cls == class_indict[cls]:
                     num_acc += 1
 
     print('num of test datasets =', num_all)
