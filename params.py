@@ -17,10 +17,10 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 num_classes = 3
-img_size = 224
+img_size = 299
 
 # 模型
-model = models.convnext(num_classes)
+model = models.inception_v3(num_classes)
 
 # 损失函数
 loss_function = FocalLoss(num_classes)
