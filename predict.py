@@ -49,7 +49,7 @@ def main(args):
     for cls in os.listdir(test_path):
         num_all += len(os.listdir(os.path.join(test_path, cls)))
         for img_path in os.listdir(os.path.join(test_path, cls)):
-            label_true.append(int(cls))
+            label_true.append(class_indict[cls])
             img_path = os.path.join(test_path, cls, img_path)
             assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
             img = Image.open(img_path)
@@ -62,8 +62,8 @@ def main(args):
                 # predict class
                 output = torch.squeeze(model(img.to(device))).cpu()
                 predict = torch.softmax(output, dim=0)
-                predict_cls = torch.argmax(predict).numpy()
-                label_predict.append(int(predict_cls))
+                predict_cls = torch.argmax(predict).numpy()  # choice = [0,1,2]
+                label_predict.append(predict_cls)
 
                 # print_res = "class: {}   prob: {:.3}".format(class_indict[str(predict_cls)],
                 #                                              predict[predict_cls].numpy())
