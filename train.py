@@ -8,7 +8,7 @@ from torchvision import transforms
 
 import params
 from my_dataset import MyDataSet
-from utils import split_train_val, create_lr_scheduler, get_params_groups, train_one_epoch, evaluate
+from utils import split_train_val, read_data, create_lr_scheduler, get_params_groups, train_one_epoch, evaluate
 
 
 def main(args):
@@ -19,18 +19,22 @@ def main(args):
     tb_writer = SummaryWriter()
 
     train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
+    # train_images_path, train_images_label = read_data(args.train_path, 'train')
+    # val_images_path, val_images_label = read_data(args.val_path, 'val')
 
     img_size = params.img_size
     data_transform = {
-        "train": transforms.Compose([# transforms.RandomResizedCrop(img_size),
-                                     # transforms.RandomHorizontalFlip(),
-                                     transforms.Resize((img_size, img_size)),
-                                     transforms.ToTensor(),
-                                     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
-        "val": transforms.Compose([transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
-                                   transforms.CenterCrop(img_size),
-                                   transforms.ToTensor(),
-                                   transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
+        "train": transforms.Compose([
+            # transforms.RandomResizedCrop(img_size),
+            # transforms.RandomHorizontalFlip(),
+            transforms.Resize((img_size, img_size)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
+        "val": transforms.Compose([
+            transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
+            transforms.CenterCrop(img_size),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
     # 实例化训练数据集
     train_dataset = MyDataSet(images_path=train_images_path,
@@ -107,7 +111,10 @@ if __name__ == '__main__':
     # 模型保存名称
     parser.add_argument('--model-name', type=str, default='')
     # 数据集所在根目录
-    parser.add_argument('--data-path', type=str, default=params.path_train)
+    parser.add_argument('--data-path', type=str, default=params.path_data)
+    parser.add_argument('--train-path', type=str, default=params.path_train)
+    parser.add_argument('--val-path', type=str, default=params.path_test)
+
     # 预训练权重路径
     parser.add_argument('--weights', type=str,
                         default='',
