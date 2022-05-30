@@ -52,7 +52,7 @@ def main(args):
             label_true.append(class_indict[cls])
             img_path = os.path.join(test_path, cls, img_path)
             assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
-            img = Image.open(img_path)
+            img = Image.open(img_path).convert('RGB')
             # [N, C, H, W]
             img = data_transform(img)
             # expand batch dimension
