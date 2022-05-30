@@ -25,7 +25,7 @@ def split_train_val(root: str, val_rate: float = 0.2):
     classes.sort()
     # 生成类别名称以及对应的数字索引
     class_indices = dict((k, v) for v, k in enumerate(classes))
-    json_str = json.dumps(dict((val, key) for key, val in class_indices.items()), indent=4)
+    json_str = json.dumps(class_indices, indent=4)
     with open(str(params.ROOT / 'class_indices.json'), 'w') as json_file:
         json_file.write(json_str)
 
@@ -78,7 +78,7 @@ def read_data(root: str, mode: str):
     classes.sort()
     # 生成类别名称以及对应的数字索引
     class_indices = dict((k, v) for v, k in enumerate(classes))
-    json_str = json.dumps(dict((val, key) for key, val in class_indices.items()), indent=4)
+    json_str = json.dumps(dict((key, val) for key, val in class_indices.items()), indent=4)
     with open(params.path_json, 'w') as json_file:
         json_file.write(json_str)
 
