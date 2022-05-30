@@ -64,6 +64,9 @@ def main(args):
                                              collate_fn=val_dataset.collate_fn)
 
     model = params.model.to(device)
+    if args.weights != '':
+        weights = os.path.join(params.path_weights, args.weights)
+        model.load_state_dict(torch.load(weights, map_location=device))
     model_path = os.path.join(params.path_weights, args.model_name + '.pth')  # 模型保存路径
 
     # pg = [p for p in model.parameters() if p.requires_grad]
