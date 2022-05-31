@@ -18,14 +18,15 @@ def main(args):
 
     tb_writer = SummaryWriter()
 
-    # train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
+    train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
+    exit()
     train_images_path, train_images_label = read_data(args.train_path, 'train')
     val_images_path, val_images_label = read_data(args.val_path, 'val')
 
     img_size = params.img_size
     data_transform = {
         "train": transforms.Compose([
-            # transforms.RandomResizedCrop(img_size),
+            # transforms.RandomResizedCrop((img_size, img_size)),
             # transforms.RandomHorizontalFlip(),
             transforms.Resize((img_size, img_size)),
             transforms.ToTensor(),
