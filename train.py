@@ -67,6 +67,7 @@ def main(args):
 
     model = params.model.to(device)
     if args.weights != '':
+        print('have pre weights')
         weights = os.path.join(params.path_weights, args.weights)
         model.load_state_dict(torch.load(weights, map_location=device))
     model_path = os.path.join(params.path_weights, args.model_name + '.pth')  # 模型保存路径
