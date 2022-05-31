@@ -20,9 +20,9 @@ def main(args):
     num_classes = params.num_classes
     img_size = params.img_size
     data_transform = transforms.Compose(
-        [transforms.Resize(int(img_size * 1.14)),
+        [transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
          transforms.CenterCrop(img_size),
-         # [transforms.Resize(img_size),
+         # [transforms.Resize((img_size, img_size)),
          transforms.ToTensor(),
          transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
