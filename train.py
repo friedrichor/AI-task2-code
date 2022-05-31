@@ -32,6 +32,7 @@ def main(args):
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
         "val": transforms.Compose([
             transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
+            # transforms.Resize((img_size, img_size)),
             transforms.CenterCrop(img_size),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
