@@ -18,8 +18,7 @@ def main(args):
 
     tb_writer = SummaryWriter()
 
-    train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
-    exit()
+    # train_images_path, train_images_label, val_images_path, val_images_label = split_train_val(args.data_path)
     train_images_path, train_images_label = read_data(args.train_path, 'train')
     val_images_path, val_images_label = read_data(args.val_path, 'val')
 
