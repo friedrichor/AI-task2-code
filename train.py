@@ -47,6 +47,7 @@ def main(args):
                             images_class=val_images_label,
                             transform=data_transform["val"])
 
+
     batch_size = args.batch_size
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
@@ -63,6 +64,7 @@ def main(args):
                                              pin_memory=True,
                                              num_workers=nw,
                                              collate_fn=val_dataset.collate_fn)
+
 
     model = params.model.to(device)
     if args.weights != '':
