@@ -31,9 +31,9 @@ def main(args):
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
         "val": transforms.Compose([
-            transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
-            # transforms.Resize((img_size, img_size)),
-            transforms.CenterCrop(img_size),
+            # transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
+            # transforms.CenterCrop(img_size),
+            transforms.Resize((img_size, img_size)),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
@@ -76,6 +76,7 @@ def main(args):
     # pg = [p for p in model.parameters() if p.requires_grad]
     pg = get_params_groups(model, weight_decay=args.wd)
     optimizer = optim.AdamW(pg, lr=args.lr, weight_decay=args.wd)
+    # lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=10, T_mult=10)
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), args.epochs,
                                        warmup=True, warmup_epochs=1)
     best_acc = 0.
