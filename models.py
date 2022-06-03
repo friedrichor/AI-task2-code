@@ -6,6 +6,35 @@ import params
 from model_convnext import convnext_large
 
 
+def densenet(out_channel: int = 3):
+    model = models.densenet169(False)
+    in_channel = model.classifier.in_features
+    model.classifier = nn.Sequential(torch.nn.Linear(in_channel, 256),
+                                     torch.nn.ReLU(),
+                                     torch.nn.Dropout(0.5),
+                                     torch.nn.Linear(256, out_channel))
+    model.features.conv0.kernel_size = (10, 10)
+    for layer1 in model.features.children():
+        # print('layer1 = ', layer1)
+        if layer1._get_name() == '_DenseBlock' or layer1._get_name() == '_DenseLayer':
+            for layer2 in layer1.children():
+                # print('layer2 = ', layer2)
+                for layer3 in layer2.children():
+                    # print('layer3 = ', layer3)
+                    if layer3._get_name() == 'Conv2d':
+                        layer3.kernel_size = (10, 10)
+    return model
+
+
+# def densenet(out_channel: int = 3):
+#     model = models.densenet121(False)
+#     in_channel = model.classifier.in_features
+#     model.classifier = nn.Sequential(torch.nn.Linear(in_channel, 512),
+#                                      torch.nn.Dropout(0.1),
+#                                      torch.nn.Linear(512, out_channel))
+#     return model
+
+
 def convnext(out_channel: int = 3, weights: str = '', freeze_layers: bool = False):
     model = convnext_large(num_classes=out_channel).to(params.device)
     if weights != "":
@@ -40,13 +69,6 @@ def efficientnet(outchannel: int = 3):
     return model
 
 
-def densenet(out_channel: int = 3):
-    model = models.densenet121(False)
-    in_channel = model.classifier.in_features
-    model.classifier = torch.nn.Linear(in_channel, out_channel)
-    return model
-
-
 def resnet(out_channel: int = 3):
     model = models.resnet50(False)
     in_channel = model.fc.in_features
@@ -64,7 +86,7 @@ def vit(out_channel: int = 3):
 class MixModel1(nn.Module):
     def __init__(self, num_classes: int = 3):
         super(MixModel1, self).__init__()
-        self.model1 = convnext(num_classes)
+        self.model1 = densenet(num_classes)
         self.model2 = inception_v3(num_classes)
         # layers
         self.fc = nn.Linear(in_features=2 * num_classes, out_features=num_classes)
