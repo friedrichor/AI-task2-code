@@ -36,8 +36,11 @@ def main(args):
     # create model
     model = params.model.to(device)
     # load model weights
-    weights = os.path.join(params.path_weights, args.model_name + '.pth')  # 模型保存路径
-    model.load_state_dict(torch.load(weights, map_location=device))
+    if args.model_name == '':
+        model.load_state_dict(torch.load(args.weights, map_location=device))
+    else:
+        weights = os.path.join(params.path_weights, args.model_name + '.pth')  # 模型保存路径
+        model.load_state_dict(torch.load(weights, map_location=device))
     model.eval()
 
     test_path = args.path_test
@@ -91,7 +94,7 @@ def parse_opt():
     parser = argparse.ArgumentParser()
     # 模型参数
     parser.add_argument('--model-name', type=str, default='')
-    # parser.add_argument('--weights', nargs='+', type=str, default=params.weights, help='model weights path')
+    parser.add_argument('--weights', nargs='+', type=str, default=params.weights, help='model weights path')
     # 测试集路径
     parser.add_argument('--path_test', type=str, default=params.path_test, help='test datasets path')
     parser.add_argument('--path_json', type=str, default=params.path_json, help='class_indice.json path')
