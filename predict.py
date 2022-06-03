@@ -5,11 +5,14 @@ import argparse
 
 import torch
 from PIL import Image
+import numpy as np
 from torchvision import transforms
 import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+from collections import Counter
 
 import params
+from data_process import crop_image_from_gray
 
 
 def main(args):
@@ -19,10 +22,10 @@ def main(args):
 
     num_classes = params.num_classes
     img_size = params.img_size
-    data_transform = transforms.Compose(
-        [transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
-         transforms.CenterCrop(img_size),
-         # [transforms.Resize((img_size, img_size)),
+    data_transform = transforms.Compose([
+         # transforms.Resize((int(img_size * 1.143), int(img_size * 1.143))),
+         # transforms.CenterCrop((img_size, img_size)),
+         transforms.Resize((img_size, img_size)),
          transforms.ToTensor(),
          transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
@@ -50,33 +53,58 @@ def main(args):
     label_predict = []
     # 数据预处理
     for cls in os.listdir(test_path):
-        num_all += len(os.listdir(os.path.join(test_path, cls)))
-        for img_path in os.listdir(os.path.join(test_path, cls)):
-            label_true.append(class_indict[cls])
-            img_path = os.path.join(test_path, cls, img_path)
-            assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
-            img = Image.open(img_path).convert('RGB')
-            # [N, C, H, W]
-            img = data_transform(img)
-            # expand batch dimension
-            img = torch.unsqueeze(img, dim=0)
+        print('cls =', cls)
+        path_cls = os.path.join(test_path, cls)
+        for patient in os.listdir(path_cls):
+            print('patient =', patient)
+            path_patient = os.path.join(path_cls, patient)
+            num_all += len(os.listdir(path_patient))
+            label_predict_tmp = []
+            for img_path in os.listdir(path_patient):
+                label_true.append(class_indict[cls])
+                img_path = os.path.join(path_patient, img_path)
+                assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
+                img = Image.open(img_path).convert('RGB')
 
-            with torch.no_grad():
-                # predict class
-                output = torch.squeeze(model(img.to(device))).cpu()
-                predict = torch.softmax(output, dim=0)
-                predict_cls = torch.argmax(predict).numpy()  # choice = [0,1,2]
-                label_predict.append(predict_cls)
+                # # 数据预处理
+                # img_pro = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+                # img_pro = crop_image_from_gray(img_pro)
+                # img_pro = cv2.resize(img_pro, (224, 224))
+                # # 恢复PIL格式
+                # img = Image.fromarray(cv2.cvtColor(img_pro, cv2.COLOR_BGR2RGB))
 
-                # print_res = "class: {}   prob: {:.3}".format(class_indict[str(predict_cls)],
-                #                                              predict[predict_cls].numpy())
-                # print(print_res)
-                # for i in range(len(predict)):
-                #     print("class: {:10}   prob: {:.3}".format(class_indict[str(i)], predict[i].numpy()))
+                # [N, C, H, W]
+                img = data_transform(img)
+                # expand batch dimension
+                img = torch.unsqueeze(img, dim=0)
 
-                if predict_cls == class_indict[cls]:
-                    num_acc += 1
+                with torch.no_grad():
+                    # predict class
+                    output = torch.squeeze(model(img.to(device))).cpu()
+                    predict = torch.softmax(output, dim=0)
+                    predict_cls = torch.argmax(predict).numpy()  # choice = [0,1,2]
+                    print(predict_cls)
+                    label_predict_tmp.append(int(predict_cls))
 
+                    # print_res = "class: {}   prob: {:.3}".format(class_indict[str(predict_cls)],
+                    #                                              predict[predict_cls].numpy())
+                    # print(print_res)
+                    # for i in range(len(predict)):
+                    #     print("class: {:10}   prob: {:.3}".format(class_indict[str(i)], predict[i].numpy()))
+
+                    if predict_cls == class_indict[cls]:
+                        num_acc += 1
+            # print('label_predict_tmp =', label_predict_tmp)
+            # number = Counter(label_predict_tmp)
+            # result = number.most_common()
+            # num_others = sum(i[1] for i in result[1:])
+            # if result[0][1] > num_others:
+            #     label_predict = label_predict + [result[0][0]] * len(label_predict_tmp)
+            # else:
+            #     label_predict = label_predict + label_predict_tmp
+            label_predict = label_predict + label_predict_tmp
+
+    print('label_predict =', label_predict)
     print('num of test datasets =', num_all)
     print('acc =', num_acc / num_all)
     category_show(label_true, label_predict)
